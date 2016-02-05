@@ -1,0 +1,75 @@
+.step-block {
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    border: 0;
+}
+.step-block .step-content {
+    background: #FFFFFF none repeat scroll 0 0;
+    border-image: none;
+    border-style: none solid solid;
+    border-width: 0;
+    padding: 25px;
+}
+.step-content .input-group {
+    display: table;
+    margin: 8px auto;
+    width: 100%;
+}
+.input-group {
+    border-collapse: separate;
+    display: table;
+    position: relative;
+}
+
+.step-content label {
+    border: 1px solid #c2c2c2;
+    border-radius: 5px 0 0 5px;
+    font-family: "Open Sans",sans-serif;
+    font-size: 14px;
+    height: 43px;
+    padding: 11px;
+    position: absolute;
+    width: 186px;
+}
+.step-content .f-input {
+    border: 1px solid #c2c2c2;
+    border-radius: 5px;
+    color: #4c637b;
+    display: block;
+    font-family: "Open Sans",sans-serif;
+    font-size: 14px;
+    height: 43px;
+    margin: 0px auto;
+    padding: 10px 10px 10px 200px;
+    width: 100%;
+}
+.step-content .input-group.float-left {
+    display: inline-block;
+    margin: 0;
+    vertical-align: top;
+    width: 49%;
+}
+.step-content #rfc-loading,
+.step-content #cp-loading{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 13px;
+    color: #6D5555;
+    display: none;
+}
+.form-error{
+    color: red;
+    font-size: 12px;
+    margin: 2px 0;
+}
+
+@media (min-width: 768px){
+    .modal-dialog {
+        width: 750px;
+        margin: 30px auto;
+    }
+}

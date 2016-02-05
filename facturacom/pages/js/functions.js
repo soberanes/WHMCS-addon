@@ -1,0 +1,121 @@
+$(function(){
+    initButtons();
+
+    function initButtons(){
+
+        $('.btn-send-email').unbind().on('click', function(e){
+            e.preventDefault();
+            $(this).html('<span class="glyphicon glyphicon-refresh"></span> Enviando factura');
+            $('.btn-send-email').attr("disabled", true);
+
+            var systemURL = $('#systemURL').val();
+            var invoiceId = $(this).attr('data-uid');
+            var parameters = {
+                'function' : 'sendInvoice',
+                'uid' : invoiceId
+            };
+
+            $.ajax({
+                data:  parameters,
+                url:   systemURL + 'modules/addons/facturacom/lib/apihandler.php',
+                type:  'post',
+                dataType: 'json',
+                success:  function (response) {
+                    $('.btn-send-email').attr("disabled", false);
+                    $('.btn-send-email').html('<span class="glyphicon glyphicon-envelope"></span> Enviar por correo');
+                    $('#facturaModal #facturaModalText').html(response.message);
+                    $('#facturaModal').modal();
+                }
+            });
+
+        });
+
+        $('.btn-cancel-invoice').unbind().on('click', function(e){
+            e.preventDefault();
+            var cancelBtn = $(this);
+
+            //facturaModalConfirm
+            $('#facturaModalConfirm').modal({ backdrop: 'static', keyboard: false })
+                .one('click', '#cancelInvoiceBtn', function (e) {
+
+
+                    cancelBtn.html('<span class="glyphicon glyphicon-refresh"></span> Cancelando');
+                    $('.btn-cancel-invoice').attr("disabled", true);
+
+                    var systemURL = $('#systemURL').val();
+                    var invoiceId = cancelBtn.attr('data-uid');
+                    var parameters = {
+                        'function' : 'cancelInvoice',
+                        'uid' : invoiceId
+                    };
+
+                    $.ajax({
+                        data: parameters,
+                        url: systemURL + 'modules/addons/facturacom/lib/apihandler.php',
+                        type: 'post',
+                        dataType: 'json',
+                        success: function(response){
+                            loadInvoicesTable();
+                            $('.btn-cancel-invoice').attr("disabled", false);
+                            $('.btn-cancel-invoice').html('<span class="glyphicon glyphicon-ban-circle"></span> Cancelar');
+                            $('#facturaModal #facturaModalText').html(response.message);
+                            $('#facturaModal').modal();
+                        }
+                    });
+
+            });
+
+
+
+
+
+        });
+    }
+
+    function loadInvoicesTable(){
+        var systemURL = $('#systemURL').val();
+        var parameters = {
+            'function' : 'loadInvoicesTable'
+        };
+
+        $.ajax({
+            data: parameters,
+            url: systemURL + 'modules/addons/facturacom/lib/apihandler.php',
+            type: 'post',
+            dataType: 'json',
+            success: function(response){
+                var invoices = response.data;
+                var index;
+                var content = '';
+
+                for (index = 0; index < invoices.length; ++index) {
+                    var label = (invoices[index].Status == 'enviada' ? 'label-success' : 'label-danger');
+
+                    content += '<tr><th scope="row">' + (index + 1) + '</th>' +
+                        '<td>' + invoices[index].Folio  + '</td>' +
+                        '<td>' + invoices[index].FechaTimbrado  + '</td>' +
+                        '<td>' + invoices[index].Receptor  + '</td>' +
+                        '<td><a href="' + systemURL + 'admin/clientssummary.php?userid=' + invoices[index].ReferenceClient + '" target="_blank">' + invoices[index].ReferenceClient  + '</a></td>' +
+                        '<td><a href="' + systemURL + 'admin/orders.php?action=view&id=' + invoices[index].NumOrder + '" target="_blank">' + invoices[index].NumOrder  + '</a></td>' +
+                        '<td><span class="label ' + label + '">' + invoices[index].Status  + '</span></td>' +
+                        '<td><a href="http://devfactura.in/api/publica/invoice/' + invoices[index].UID  + '/pdf">PDF</a></td>' +
+                        '<td><a href="http://devfactura.in/api/publica/invoice/' + invoices[index].UID  + '/xml">XML</a></td>';
+
+                    if(invoices[index].Status == 'enviada'){
+                        content+= '<td><a href="#" class="btn-send-email btn btn-info" data-uid="' + invoices[index].UID + '">' +
+                                        '<span class="glyphicon glyphicon-envelope"></span> Enviar por correo</a>' +
+                                    '<a href="#" class="btn-cancel-invoice btn btn-danger" data-uid="' + invoices[index].UID + '">' +
+                                        '<span class="glyphicon glyphicon-ban-circle"></span> Cancelar</a></td>';
+                    }else{
+                        content+= '<td>&nbsp;</td>';
+                    }
+                    content+= '</tr>';
+                }
+
+                $('#adminInvoices tbody').html(content);
+                initButtons();
+            }
+        });
+    }
+
+});

@@ -12,4 +12,4 @@ administración.
 
 El módulo de Factura.com requiere WHMCS V6 o superior.
 
-Si requieres más información acerca de la instalación y el uso de este módulo para WHMCS, puedes contactarnos en https://factura.com/contacto o enviar un correo directamente a soporte@factura.com y con gusto te ayudarémos en lo que necesites.
+Si requieres más información acerca de la instalación y el uso de este módulo para WHMCS, puedes contactarnos en https://factura.com/contacto o enviar un correo directamente a soporte@factura.com y con gusto te ayudaremos en lo que necesites.

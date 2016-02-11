@@ -50,7 +50,7 @@ class WrapperConfig {
             'apiSecret'   => WrapperHelper::strDecode($configVars[1]),
             'serie'       => WrapperHelper::strDecode($configVars[2]),
             'dayOff'      => WrapperHelper::strDecode($configVars[3]),
-            'activateDay' => WrapperHelper::strDecode($configVars[4]),
+            'activateDate' => WrapperHelper::strDecode($configVars[4]),
             'apiUrl'      => WrapperHelper::strDecode($configVars[5]),
             'version'     => WrapperHelper::strDecode($configVars[6]),
             'access'      => WrapperHelper::strDecode($configVars[7]),
@@ -101,6 +101,26 @@ class WrapperConfig {
         }
 
         return $configVars;
+    }
+
+    /**
+     * Validate if configuration is set
+     *
+     * @param Array $configEntity
+     * @return Boolean
+     */
+    static function issetConfig($configEntity){
+
+        if(empty($configEntity['apiKey']) || empty($configEntity['apiSecret'])
+            || empty($configEntity['serie']) || empty($configEntity['dayOff'])
+            || empty($configEntity['activateDate']) || empty($configEntity['apiUrl'])
+            || empty($configEntity['version']) || empty($configEntity['access'])
+            || empty($configEntity['systemURL'])){
+
+            return false;
+        }else{
+            return true;
+        }
     }
 
     /**

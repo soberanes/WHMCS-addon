@@ -180,7 +180,18 @@ class WrapperHelper {
 
                 $configEntity = WrapperConfig::configEntity();
 
-                if($value->datepaid < date("m",strtotime($configEntity['activateDate']))){
+                if(!WrapperConfig::issetConfig($configEntity)){
+                    $invoiceList[$value->id]["open"] = false;
+                }
+
+                //$cls_date = new DateTime($configEntity['activateDate']);
+                $arr = explode('/', $configEntity['activateDate']);
+                $newDate = $arr[0].'-'.$arr[1].'-'.$arr[2];
+
+                $activateDate = strtotime($newDate); //$cls_date->format('d-m-Y');
+                $paidDate     = strtotime($value->datepaid);
+
+                if($paidDate < $activateDate){
                     $invoiceList[$value->id]["open"] = false;
                 }
 

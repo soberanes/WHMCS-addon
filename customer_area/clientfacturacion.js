@@ -198,7 +198,7 @@ $(function(){
         modalForm.find('#fiscal-colonia').val(client.Colonia);
         modalForm.find('#fiscal-municipio').val(client.Ciudad);
         modalForm.find('#fiscal-estado').val(client.Estado);
-        modalForm.find('#fiscal-cp').val(client.CodigoPosal);
+        modalForm.find('#fiscal-cp').val(client.CodigoPostal);
     }
 
 

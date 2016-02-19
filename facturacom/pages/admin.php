@@ -38,6 +38,7 @@
         </thead>
         <tbody>
             <?php
+        if(isset($invoices->data)):
             foreach ($invoices->data as $invoice):
                 $index ++;
                 $label = ($invoice->Status == 'enviada') ? 'label-success' : 'label-danger';
@@ -69,8 +70,13 @@
             </tr>
             <?php
             endforeach
+        endif;
             ?>
-
+            <tr>
+                <td colspan="10">
+                    No se han encontrado resultados
+                </td>
+            </tr>
 
         </tbody>
     </table>

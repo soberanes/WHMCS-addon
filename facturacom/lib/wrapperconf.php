@@ -22,7 +22,7 @@ class WrapperConfig {
         $moduleVars   = WrapperHelper::getConfigVars();
         $systemConfig = WrapperHelper::getSystemUrl();
 
-        self::setApiUrl('http://devfactura.in/api/v1/');
+        self::setApiUrl('https://factura.com/api/v1/');
         self::setApiKey($moduleVars['ApiKey']);
         self::setApiSecret($moduleVars['ApiSecret']);
         self::setSerie($moduleVars['Serie']);

@@ -1,5 +1,7 @@
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="templates/six/customer_area/clientfacturacion.css" media="screen" title="no title" charset="utf-8">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.2.8/jquery.form-validator.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="templates/six/customer_area/clientfacturacion.js"></script>
 <h3>Pedidos sin facturar</h3>
 <input type="hidden" id="systemURL" value="{$systemURL}">
@@ -55,11 +57,10 @@
                 <th>Fecha de creación</th>
                 <th>Receptor</th>
                 <th>Núm. Pedido</th>
-                <th>Estatus</th>
                 <th>Monto total</th>
+                <th>Estatus</th>
                 <th>PDF</th>
                 <th>XML</th>
-                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -69,8 +70,8 @@
                     <td><span class="hidden">{$invoice.FechaTimbrado}</span>{$invoice.FechaTimbrado}</td>
                     <td>{$invoice.Receptor}</td>
                     <td><a href="clientarea.php?action=productdetails&id={$invoice.NumOrder}">{$invoice.NumOrder}</a></td>
-                    <td><span class="label status status-{if $invoice.Status eq 'enviada'}paid{else}cancelled{/if}">{$invoice.Status}</span></td>
                     <td>${$invoice.Total}</td>
+                    <td><span class="label status status-{if $invoice.Status eq 'enviada'}paid{else}cancelled{/if}">{$invoice.Status}</span></td>
                     <td class="responsive-edit-button">
                         <a href="http://devfactura.in/api/publica/invoice/{$invoice.UID}/pdf" class="btn-send-email btn btn-info" data-uid="{$invoice.UID}">
                             <span class="glyphicon glyphicon-file"></span>

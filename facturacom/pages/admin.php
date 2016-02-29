@@ -11,8 +11,19 @@
     .label-success {
         background-color: #5cb85c;
     }
+    table.dataTable thead th {
+        background-image: url("../images/sort_asc.png");
+        background-color: #2A5E90;
+        color: #FFFFFF;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+        background: #2A5E90;
+        color: #FFFFFF !important;
+        border-color: #46b8da;
+    }
 </style>
-<script src="<?php echo $systemURL ?>/modules/addons/facturacom/pages/js/functions.js" type="text/javascript"></script>
 <input type="hidden" id="systemURL" value="<?php echo $systemURL ?>" />
 <p class="text-msg">
     <?php echo count($invoices->data) ?> facturas en sistema.
@@ -21,15 +32,15 @@
     <input type="hidden" id="kval" value="<?php echo $config["key"] ?>">
     <input type="hidden" id="sval" value="<?php echo $config["secret"] ?>">
     <input type="hidden" id="aval" value="<?php echo $config["user"] ?>">
-    <table id="adminInvoices" class="datatable" width="100%" cellspacing="1" cellpadding="3">
+    <table id="adminInvoices" width="100%" cellspacing="1" cellpadding="3">
         <thead>
             <tr>
-                <th>#</th>
                 <th>Folio</th>
                 <th>Fecha de creación</th>
                 <th>Receptor</th>
                 <th>Núm. de cliente</th>
                 <th>Núm. de pedido</th>
+                <th>Monto total</th>
                 <th>Estado</th>
                 <th>PDF</th>
                 <th>XML</th>
@@ -38,23 +49,21 @@
         </thead>
         <tbody>
             <?php
-        if(isset($invoices->data)):
             foreach ($invoices->data as $invoice):
-                $index ++;
                 $label = ($invoice->Status == 'enviada') ? 'label-success' : 'label-danger';
             ?>
             <tr>
-                <th scope="row"><?php echo $index ?></th>
                 <td><?php echo $invoice->Folio ?></td>
                 <td><?php echo $invoice->FechaTimbrado ?></td>
                 <td><?php echo $invoice->Receptor ?></td>
                 <td><a href="<?php echo $systemURL ?>admin/clientssummary.php?userid=<?php echo $invoice->ReferenceClient ?>" target="_blank"><?php echo $invoice->ReferenceClient ?></a></td>
                 <td><a href="<?php echo $systemURL ?>admin/orders.php?action=view&id=<?php echo $invoice->NumOrder ?>" target="_blank"><?php echo $invoice->NumOrder ?></a></td>
+                <td><?php echo '$'.$invoice->Total ?></td>
                 <td><span class="label <?php echo $label ?>"><?php echo $invoice->Status ?></span></td>
                 <td><a href="http://devfactura.in/api/publica/invoice/<?php echo $invoice->UID ?>/pdf">PDF</a></td>
                 <td><a href="http://devfactura.in/api/publica/invoice/<?php echo $invoice->UID ?>/xml">XML</a></td>
-                <?php if($invoice->Status == 'enviada'): ?>
                 <td>
+                  <?php if($invoice->Status == 'enviada'): ?>
                     <a href="#" class="btn-send-email btn btn-info" data-uid="<?php echo $invoice->UID ?>">
                         <span class="glyphicon glyphicon-envelope"></span>
                         Enviar por correo
@@ -63,20 +72,14 @@
                         <span class="glyphicon glyphicon-ban-circle"></span>
                         Cancelar
                     </a>
+                  <?php else: ?>
+                    &nbsp;
+                  <?php endif ?>
                 </td>
-                <?php else: ?>
-                    <td>&nbsp;</td>
-                <?php endif ?>
             </tr>
             <?php
-            endforeach
-        endif;
-            ?>
-            <tr>
-                <td colspan="10">
-                    No se han encontrado resultados
-                </td>
-            </tr>
+          endforeach
+          ?>
 
         </tbody>
     </table>

@@ -118,4 +118,34 @@ $(function(){
         });
     }
 
+    $('#adminInvoices').DataTable({
+      'aoColumnDefs': [
+        { 'bSortable': false, 'aTargets': [ 6,7,8,9 ] }
+      ],
+      'language': {
+        'decimal':        '',
+        'emptyTable':     'No hay información disponible',
+        'info':           'Mostrando del _START_ al _END_ de _TOTAL_ registros',
+        'infoEmpty':      'Mostrando del 0 al 0 de 0 registros',
+        'infoFiltered':   '(filtrado de _MAX_ registros totales)',
+        'infoPostFix':    '',
+        'thousands':      ',',
+        'lengthMenu':     'Mostrar _MENU_ registros',
+        'loadingRecords': 'Cargando...',
+        'processing':     'Procesando...',
+        'search':         'Buscar:',
+        'zeroRecords':    'No se encontraron resultados',
+        'paginate': {
+          'first':    'Primero',
+          'last':     'Último',
+          'next':     'Siguiente',
+          'previous': 'Anterior'
+        },
+        'aria': {
+          'sortAscending':  ': activar para ordernar la columna ascendentemente',
+          'sortDescending': ': activar para ordernar la columna descendentemente'
+        }
+      }
+    });
+
 });

@@ -184,11 +184,14 @@ class WrapperHelper {
                     $invoiceList[$value->id]["open"] = false;
                 }
 
-                //$cls_date = new DateTime($configEntity['activateDate']);
                 $arr = explode('/', $configEntity['activateDate']);
+                /* formatear la fecha a dd-mm-aaaa porque la fecha datepaid
+                   tiene ese formato en WHMCS y deben tener el mismo formato para
+                   compararse. */
                 $newDate = $arr[0].'-'.$arr[1].'-'.$arr[2];
 
-                $activateDate = strtotime($newDate); //$cls_date->format('d-m-Y');
+
+                $activateDate = strtotime($newDate);
                 $paidDate     = strtotime($value->datepaid);
 
                 if($paidDate < $activateDate){

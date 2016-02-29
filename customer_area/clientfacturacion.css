@@ -73,3 +73,21 @@
         margin: 30px auto;
     }
 }
+.dataTables_wrapper .dataTables_info{
+  background: transparent;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+    background: #31b0d5;
+    color: #FFFFFF !important;
+    border-color: #46b8da;
+}
+.dataTables_wrapper .dataTables_info{
+  border-bottom: none;
+}
+.dataTables_wrapper .dataTables_paginate{
+  padding: 0px 10px 7px;
+}

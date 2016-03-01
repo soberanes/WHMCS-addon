@@ -50,6 +50,7 @@
         <tbody>
             <?php
             foreach ($invoices->data as $invoice):
+
                 $label = ($invoice->Status == 'enviada') ? 'label-success' : 'label-danger';
             ?>
             <tr>
@@ -57,11 +58,11 @@
                 <td><?php echo $invoice->FechaTimbrado ?></td>
                 <td><?php echo $invoice->Receptor ?></td>
                 <td><a href="<?php echo $systemURL ?>admin/clientssummary.php?userid=<?php echo $invoice->ReferenceClient ?>" target="_blank"><?php echo $invoice->ReferenceClient ?></a></td>
-                <td><a href="<?php echo $systemURL ?>admin/orders.php?action=view&id=<?php echo $invoice->NumOrder ?>" target="_blank"><?php echo $invoice->NumOrder ?></a></td>
+                <td><a href="<?php echo $systemURL ?>admin/invoices.php?action=edit&id=<?php echo $invoice->NumOrder ?>" target="_blank"><?php echo $invoice->NumOrder ?></a></td>
                 <td><?php echo '$'.$invoice->Total ?></td>
                 <td><span class="label <?php echo $label ?>"><?php echo $invoice->Status ?></span></td>
-                <td><a href="http://devfactura.in/api/publica/invoice/<?php echo $invoice->UID ?>/pdf">PDF</a></td>
-                <td><a href="http://devfactura.in/api/publica/invoice/<?php echo $invoice->UID ?>/xml">XML</a></td>
+                <td><a href="https://factura.com/api/publica/invoice/<?php echo $invoice->UID ?>/pdf">PDF</a></td>
+                <td><a href="https://factura.com/api/publica/invoice/<?php echo $invoice->UID ?>/xml">XML</a></td>
                 <td>
                   <?php if($invoice->Status == 'enviada'): ?>
                     <a href="#" class="btn-send-email btn btn-info" data-uid="<?php echo $invoice->UID ?>">

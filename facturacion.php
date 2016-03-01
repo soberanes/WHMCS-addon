@@ -8,7 +8,7 @@ require('modules/addons/facturacom/wrapperapp.php');
 $ca = new WHMCS_ClientArea();
 $ca->setPageTitle("Facturación de servicios");
 $ca->initPage();
-$ca->requireLogin(); // Uncomment this line to require a login to access this page
+$ca->requireLogin();
 
 if ($ca->isLoggedIn()) {
 
@@ -30,6 +30,7 @@ if ($ca->isLoggedIn()) {
     $ca->assign('whmcsInvoices', $whmcsInvoices);
     $ca->assign('clientInvoices', $clientInvoices);
     $ca->assign('systemURL', $configEntity['systemURL']);
+    $ca->assign('apiUrl', $configEntity['apiUrl']);
     $ca->assign('serieInvoices', $configEntity['serie']);
 
 } else {

@@ -73,13 +73,13 @@
                     <td>${$invoice.Total}</td>
                     <td><span class="label status status-{if $invoice.Status eq 'enviada'}paid{else}cancelled{/if}">{$invoice.Status}</span></td>
                     <td class="responsive-edit-button">
-                        <a href="http://devfactura.in/api/publica/invoice/{$invoice.UID}/pdf" class="btn-send-email btn btn-info" data-uid="{$invoice.UID}">
+                        <a href="https://factura.com/api/publica/invoice/{$invoice.UID}/pdf" class="btn-send-email btn btn-info" data-uid="{$invoice.UID}">
                             <span class="glyphicon glyphicon-file"></span>
                             Descargar PDF
                         </a>
                     </td>
                     <td class="responsive-edit-button">
-                        <a href="http://devfactura.in/api/publica/invoice/{$invoice.UID}/xml" class="btn-send-email btn btn-info" data-uid="{$invoice.UID}">
+                        <a href="https://factura.com/api/publica/invoice/{$invoice.UID}/xml" class="btn-send-email btn btn-info" data-uid="{$invoice.UID}">
                             <span class="glyphicon glyphicon-file"></span>
                             Descargar XML
                         </a>

@@ -246,7 +246,6 @@ class WrapperHelper {
 
         $configEntity = WrapperConfig::configEntity();
 
-
         $url = $configEntity['apiUrl'] . 'whmcs/invoices';
         $url.= (isset($clientId)) ? '/' . $clientId : '';
 

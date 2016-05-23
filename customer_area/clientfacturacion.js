@@ -87,20 +87,22 @@ $(function(){
             dataType: 'json',
             success:  function (response) {
                 $('#cp-loading').fadeOut();
-                console.log(response);
-                /*
-                if(response.status == 'success'){
-                    console.log(response);
-                    $('.f-edit').attr('disabled', false);
-                }else{
-                    $('.f-edit').attr('disabled', true);
-                    resetModalForm(1);
+                if(response){
+                  fillLocationForm(response);
                 }
-                */
             }
         });
 
     });
+
+    function fillLocationForm(location){
+      var modalForm = $('#modalForm');
+
+      var colonias = location.colonias.split(",");
+      modalForm.find('#fiscal-colonia').val(colonias[0]);
+      modalForm.find('#fiscal-municipio').val(location.ciudad);
+      modalForm.find('#fiscal-estado').val(location.estado);
+    }
 
     $('#fiscal-rfc').change(function(){
         $('#rfc-loading').fadeIn();
@@ -133,17 +135,25 @@ $(function(){
 
 	});
 
-    $('#fiscalDataForm').unbind().on('click', function(e){
+    $('#invoice-button-create').unbind().on('click', function(e){
         e.preventDefault();
 
-        $(this).validate();
+        // $(this).validate({
+        //   submitHandler: function(form) {
+        //     // do other things for a valid form
+        //     form.submit();
+        //   }
+        // });
+        var form = $('#fiscalDataForm');
 
-        if(!$(this).isValid()){
-            return false;
+        if(!form.isValid()){
+          console.log('Formulario no se puede enviar');
+          return false;
         }
 
         $(this).attr('disabled', true);
         $(this).val('Procesando');
+
         var dataForm = $('#fiscalDataForm').serializeArray();
         var clientData = [];
 

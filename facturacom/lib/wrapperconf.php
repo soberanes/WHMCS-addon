@@ -4,13 +4,14 @@ class WrapperConfig {
 
     static $apiUrl       = '';
     static $apiKey       = '';
-	static $apiSecret    = '';
-	static $serie        = '';
-	static $dayOff       = '';
-	static $activateDate = '';
+    static $apiSecret    = '';
+    static $serie        = '';
+    static $dayOff       = '';
+    static $activateDate = '';
     static $version      = '';
     static $access       = '';
     static $systemURL    = '';
+    static $iva          = '';
 
     /**
      * Setting and saving vars in file system
@@ -23,6 +24,7 @@ class WrapperConfig {
         $systemConfig = WrapperHelper::getSystemUrl();
 
         self::setApiUrl('https://factura.com/api/v1/');
+        // self::setApiUrl('https://factura.com/api/v1/');
         self::setApiKey($moduleVars['ApiKey']);
         self::setApiSecret($moduleVars['ApiSecret']);
         self::setSerie($moduleVars['Serie']);
@@ -31,7 +33,7 @@ class WrapperConfig {
         self::setVersion($moduleVars['version']);
         self::setAccess($moduleVars['access']);
         self::setSystemURL($systemConfig['SystemURL']);
-
+        self::setIVA($moduleVars['IVA']);
         self::saveConf();
 
         return true;
@@ -46,15 +48,16 @@ class WrapperConfig {
         $configVars = self::getConf();
 
         return array(
-            'apiKey'      => WrapperHelper::strDecode($configVars[0]),
-            'apiSecret'   => WrapperHelper::strDecode($configVars[1]),
-            'serie'       => WrapperHelper::strDecode($configVars[2]),
-            'dayOff'      => WrapperHelper::strDecode($configVars[3]),
+            'apiKey'       => WrapperHelper::strDecode($configVars[0]),
+            'apiSecret'    => WrapperHelper::strDecode($configVars[1]),
+            'serie'        => WrapperHelper::strDecode($configVars[2]),
+            'dayOff'       => WrapperHelper::strDecode($configVars[3]),
             'activateDate' => WrapperHelper::strDecode($configVars[4]),
-            'apiUrl'      => WrapperHelper::strDecode($configVars[5]),
-            'version'     => WrapperHelper::strDecode($configVars[6]),
-            'access'      => WrapperHelper::strDecode($configVars[7]),
-            'systemURL'   => WrapperHelper::strDecode($configVars[8]),
+            'apiUrl'       => WrapperHelper::strDecode($configVars[5]),
+            'version'      => WrapperHelper::strDecode($configVars[6]),
+            'access'       => WrapperHelper::strDecode($configVars[7]),
+            'systemURL'    => WrapperHelper::strDecode($configVars[8]),
+            'iva'          => WrapperHelper::strDecode($configVars[9]),
         );
     }
 
@@ -82,7 +85,9 @@ class WrapperConfig {
         //write access
         fwrite($configFile, WrapperHelper::strEncode(self::$access)."\n");
         //write systemURL
-        fwrite($configFile, WrapperHelper::strEncode(self::$systemURL));
+        fwrite($configFile, WrapperHelper::strEncode(self::$systemURL)."\n");
+        //write iva
+        fwrite($configFile, WrapperHelper::strEncode(self::$iva));
 
         fclose($configFile);
     }
@@ -112,7 +117,7 @@ class WrapperConfig {
     static function issetConfig($configEntity){
 
         if(empty($configEntity['apiKey']) || empty($configEntity['apiSecret'])
-            || empty($configEntity['serie']) || empty($configEntity['dayOff'])
+            || empty($configEntity['serie'])
             || empty($configEntity['activateDate']) || empty($configEntity['apiUrl'])
             || empty($configEntity['version']) || empty($configEntity['access'])
             || empty($configEntity['systemURL'])){
@@ -283,6 +288,24 @@ class WrapperConfig {
      */
     static function setSystemURL($systemURL){
         self::$systemURL = $systemURL;
+    }
+
+    /**
+     * Get IVA
+     *
+     * @return String
+     */
+    static function getIVA(){
+        return self::$iva;
+    }
+
+    /**
+     * Set IVA
+     *
+     * @param String $iva
+     */
+    static function setIVA($iva){
+        self::$iva = $iva;
     }
 
 }

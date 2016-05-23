@@ -5,7 +5,7 @@
  * @copyright (c) Octuber 2015, Factura.com
  */
 header('Access-Control-Allow-Methods:POST');
-header('Access-Control-Allow-Origin: http://devfactura.in');
+header('Access-Control-Allow-Origin: https://factura.com');
 header('Access-Control-Allow-Credentials : true');
 
 require_once 'wrapperhelper.php';
@@ -89,8 +89,9 @@ function createInvoice(){
     $orderNum       = $_POST['orderNum'];
     $orderItems     = $_POST['orderItems'];
     $clientData     = $_POST['clientData'];
+    $invoideData    = json_decode($clientData[18]["value"]);
     $serieInvoices  = $_POST['serieInvoices'];
     $clientW        = $_POST['clientW'];
-
-    return WrapperHelper::createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW);
+    $paymentMethod  = ucfirst($invoideData[0]->paymentmethod);
+    return WrapperHelper::createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW, $paymentMethod);
 }

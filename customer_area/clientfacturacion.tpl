@@ -31,7 +31,7 @@
                     <td><span class="label status status-{if $order.status eq 'Paid'}paid{else}unpaid{/if}">{$order.status}</span></td>
                     <td>
                         {if $order.open eq true and $order.sent eq false}
-                        <a href="#" class="btn-send-email btn btn-success btn-modal-form"
+                        <a href="#" class="btn btn-success btn-modal-form"
                                 data-uid="{$order.orderId}"
                                 data-items='{$order.orderdata}'
                                 data-toggle="modal" data-target="#modalForm">

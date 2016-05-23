@@ -25,7 +25,6 @@ if ($ca->isLoggedIn()) {
 
     // Getting invoices from whmcs
     $whmcsInvoices = WrapperHelper::getWhmcsInvoices($ca->getUserID());
-
     $ca->assign('clientW', $ca->getUserID());
     $ca->assign('whmcsInvoices', $whmcsInvoices);
     $ca->assign('clientInvoices', $clientInvoices);

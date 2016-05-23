@@ -14,6 +14,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  *      getInvoices
  *      sendInvoiceEmail
  *      cancelInvoice
+ *      getLocation
  *      getClient
  *      createInvoice
  */
@@ -120,13 +121,13 @@ class WrapperHelper {
     static function getWhmcsOrders($filter = null){
         if(isset($filter)){
 
-            $ordersObj = Capsule::table('tblorders')
-                                    ->where('tblorders.ordernum', $filter['value'])
+            $ordersObj = Capsule::table('tblinvoices')
+                                    ->where('tblinvoices.invoicenum', $filter['value'])
                                     ->get();
             return $ordersObj;
         }else{
             // get all orders
-            $ordersObj = Capsule::table('tblorders')->get();
+            $ordersObj = Capsule::table('tblinvoices')->get();
         }
 
         return $ordersObj;
@@ -148,21 +149,20 @@ class WrapperHelper {
 
             $invoiceList = array();
             $facturaInvoiceList = array();
-            $invoicesObj = Capsule::table('tblorders')
-                            ->join('tblinvoices', 'tblorders.invoiceid', '=', 'tblinvoices.id')
-                            ->where('tblorders.userid', $clientId)
+            $invoicesObj = Capsule::table('tblinvoices')
+                            ->where('tblinvoices.userid', $clientId)
                             ->get();
 
             foreach($invoicesObj as $key => $value){
                 $invoiceList[$value->id]["orderId"]         = $value->id;
-                $invoiceList[$value->id]["orderNum"]        = $value->ordernum;
+                $invoiceList[$value->id]["orderNum"]        = $value->invoicenum;
                 $invoiceList[$value->id]["clientId"]        = $value->userid;
                 $invoiceList[$value->id]["orderDate"]       = date("d-m-Y",strtotime($value->date));
                 $invoiceList[$value->id]["invoiceDueDate"]  = date("d-m-Y",strtotime($value->duedate));
                 $invoiceList[$value->id]["invoiceDatePaid"] = date("d-m-Y",strtotime($value->datepaid));
                 $invoiceList[$value->id]["total"]           = $value->total;
                 $invoiceList[$value->id]["status"]          = $value->status;
-                $invoiceList[$value->id]["orderdata"]       = self::getInvoiceItems($value->invoiceid);
+                $invoiceList[$value->id]["orderdata"]       = self::getInvoiceItems($value->id);
                 $invoiceList[$value->id]["sent"] = false;
                 $invoiceList[$value->id]["open"] = true;
 
@@ -174,11 +174,12 @@ class WrapperHelper {
                 /* validar que la factura esté dentro del mes +X días y a partir
                     de la fecha de facturación configurada
                 */
-                $order_month = date("m",strtotime($value->datepaid));
+                $order_month   = date("m",strtotime($value->datepaid));
+                $order_year    = date("Y",strtotime($value->datepaid));
+                $current_day   = date("d");
                 $current_month = date("m");
-                $current_day = date("d");
-
-                $configEntity = WrapperConfig::configEntity();
+                $current_year  = date("Y");
+                $configEntity  = WrapperConfig::configEntity();
 
                 if(!WrapperConfig::issetConfig($configEntity)){
                     $invoiceList[$value->id]["open"] = false;
@@ -191,20 +192,30 @@ class WrapperHelper {
                 $newDate = $arr[0].'-'.$arr[1].'-'.$arr[2];
 
 
-                $activateDate = strtotime($newDate);
-                $paidDate     = strtotime($value->datepaid);
+                $activateDate = strtotime($newDate); //1 septiembre 2015
+                $paidDate     = strtotime($value->datepaid); //6 Octubre 2015
 
+                // Validate plugin activation date vs payment date
                 if($paidDate < $activateDate){
                     $invoiceList[$value->id]["open"] = false;
                 }
 
+                // Validate payment date vs current date
                 if($order_month != $current_month){
                     $order_day = date("d",strtotime($value->datepaid));
+
                     if($order_month < $current_month){
-                        if(intval($current_day) > $configEntity['dayOff']){
-                            $invoiceList[$value->id]["open"] = false;
-                        }
+                      if(intval($current_day) > $configEntity['dayOff']){
+                          $invoiceList[$value->id]["open"] = false;
+                      }
+
+                      if($order_month == 12){
+                        $order_year += 1;
+                      }
+                    }elseif($order_year < $current_year){
+                      $invoiceList[$value->id]["open"] = false;
                     }
+
                 }
 
             }
@@ -343,12 +354,14 @@ class WrapperHelper {
      * Update client information and create Invoice
      *
      * @param Int $orderNum
+     * @param Array $orderItems
      * @param Array $clientData
      * @param String $serieInvoices
      * @param Int $clientW
+     * @param String $paymentMethod
      * @return Array
      */
-    static function createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW){
+    static function createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW, $paymentMethod){
         if($clientData[0] == ""){
             return array(
                 'Error' => 'No se ha recibido el UID del cliente.',
@@ -387,6 +400,7 @@ class WrapperHelper {
 
         $request = 'POST';
         $processClient = WrapperApi::callCurl($clientUrl, $request, $params);
+
         if($processClient->status != 'success'){
             return array(
                 'Error' => 'Ha ocurrido un error. Por favor revise sus datos e inténtelo de nuevo.',
@@ -396,16 +410,37 @@ class WrapperHelper {
         $itemsCollection = json_decode($orderItems);
         $invoiceConcepts = array();
 
+        //Adding concepts to invoice
         foreach ($itemsCollection as $value){
+            $productPrice = 0;
+
+            if($configEntity["iva"] == 'on'){
+              $productPrice = $value->amount - ($value->amount * 0.16);
+            }else{
+              $productPrice = $value->amount;
+            }
+
             $product = array(
                 'cantidad'  => 1,
                 'unidad'    => 'Servicio',
                 'concept'   => $value->description,
-                'precio'    => $value->amount,
+                'precio'    => $productPrice,
                 'subtotal'  => $value->amount * 1,
             );
 
             array_push($invoiceConcepts, $product);
+        }
+
+
+        echo "<pre>";
+        // var_dump($configEntity);
+        var_dump($invoiceConcepts);
+        die;
+
+        if($paymentMethod == 'Deposito'){
+          $paymentMethodText = 'No Identificado';
+        }else{
+          $paymentMethodText = 'No Identificado';
         }
 
         $invoiceData = array(
@@ -413,7 +448,7 @@ class WrapperHelper {
             'items'         => $invoiceConcepts,
             'numerocuenta'  => 'No Identificado',
             'formapago'     => 'Pago en una Sola Exhibición',
-            'metodopago'    => 'No Identificado',
+            'metodopago'    => $paymentMethodText,
             'currencie'     => 'MXN',
             'iva'           => 1,
             'num_order'     => $orderNum,

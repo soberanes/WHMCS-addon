@@ -431,12 +431,6 @@ class WrapperHelper {
             array_push($invoiceConcepts, $product);
         }
 
-
-        echo "<pre>";
-        // var_dump($configEntity);
-        var_dump($invoiceConcepts);
-        die;
-
         if($paymentMethod == 'Deposito'){
           $paymentMethodText = 'No Identificado';
         }else{

@@ -153,15 +153,17 @@ class WrapperHelper {
                             ->where('tblinvoices.userid', $clientId)
                             ->get();
 
+                          //  print_r($invoicesObj);
+
             foreach($invoicesObj as $key => $value){
                 $invoiceList[$value->id]["orderId"]         = $value->id;
-                $invoiceList[$value->id]["orderNum"]        = $value->invoicenum;
+                $invoiceList[$value->id]["orderNum"]        = $value->id;
                 $invoiceList[$value->id]["clientId"]        = $value->userid;
                 $invoiceList[$value->id]["orderDate"]       = date("d-m-Y",strtotime($value->date));
                 $invoiceList[$value->id]["invoiceDueDate"]  = date("d-m-Y",strtotime($value->duedate));
                 $invoiceList[$value->id]["invoiceDatePaid"] = date("d-m-Y",strtotime($value->datepaid));
                 $invoiceList[$value->id]["total"]           = $value->total;
-                $invoiceList[$value->id]["status"]          = strtolower($value->status);
+                $invoiceList[$value->id]["status"]          = $value->status;
                 $invoiceList[$value->id]["orderdata"]       = self::getInvoiceItems($value->id);
                 $invoiceList[$value->id]["sent"] = false;
                 $invoiceList[$value->id]["open"] = true;
@@ -225,12 +227,12 @@ class WrapperHelper {
             foreach ($facturaInvoices as $key => $value) {
                 $facturaInvoiceList[$value->NumOrder] = $value;
                 if(array_key_exists($value->NumOrder, $invoiceList)){
-                    $invoiceList[$value->id]["sent"] = true;
+                    $invoiceList[$value->NumOrder]["sent"] = true;
                 }
             }
 
-
             $collection = array_diff_key($invoiceList, $facturaInvoiceList);
+
             return $collection;
         }
 

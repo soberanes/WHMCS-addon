@@ -161,7 +161,7 @@ class WrapperHelper {
                 $invoiceList[$value->id]["invoiceDueDate"]  = date("d-m-Y",strtotime($value->duedate));
                 $invoiceList[$value->id]["invoiceDatePaid"] = date("d-m-Y",strtotime($value->datepaid));
                 $invoiceList[$value->id]["total"]           = $value->total;
-                $invoiceList[$value->id]["status"]          = (strtolower($value->status) == 'paid') ? 'Pagada' : 'No pagada';
+                $invoiceList[$value->id]["status"]          = strtolower($value->status);
                 $invoiceList[$value->id]["orderdata"]       = self::getInvoiceItems($value->id);
                 $invoiceList[$value->id]["sent"] = false;
                 $invoiceList[$value->id]["open"] = true;

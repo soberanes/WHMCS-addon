@@ -1,4 +1,4 @@
-# WHMCS Addon de Factura.com versión 1.3
+# WHMCS Addon de Factura.com versión 1.5
 
 WHMCS es una solución todo en uno para la administración de clientes, pagos y soporte técnico para empresas
 online.

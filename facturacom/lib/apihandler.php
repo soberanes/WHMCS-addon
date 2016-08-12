@@ -92,6 +92,7 @@ function createInvoice(){
     $invoideData    = json_decode($clientData[18]["value"]);
     $serieInvoices  = $_POST['serieInvoices'];
     $clientW        = $_POST['clientW'];
-    $paymentMethod  = ucfirst($invoideData[0]->paymentmethod);
-    return WrapperHelper::createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW, $paymentMethod);
+    $paymentMethod  = $_POST['paymentMethod'];
+    $numerocuenta   = $_POST['numerocuenta'];
+    return WrapperHelper::createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW, $paymentMethod, $numerocuenta);
 }

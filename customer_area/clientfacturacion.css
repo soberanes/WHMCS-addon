@@ -91,3 +91,18 @@
 .dataTables_wrapper .dataTables_paginate{
   padding: 0px 10px 7px;
 }
+#step-two{
+    display: none;
+}
+#step-two .select{
+
+}
+#num-cta-box{
+    display: none;
+}
+#num-cta-box label{
+    width: 235px;
+}
+#num-cta-box input{
+    padding: 10px 10px 10px 250px;
+}

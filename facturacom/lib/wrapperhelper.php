@@ -26,7 +26,7 @@ class WrapperHelper {
      *
      * @param Type $var
      */
-    static function dump($arg, $die = false) {
+    static function dump($arg, $die = true) {
     	echo "<pre>";
     	var_dump($arg);
     	echo "</pre>";
@@ -152,14 +152,14 @@ class WrapperHelper {
             $invoicesObj = Capsule::table('tblinvoices')
                             ->where('tblinvoices.userid', $clientId)
                             ->get();
-
+            // self::dump($invoicesObj);
             foreach($invoicesObj as $key => $value){
                 $invoiceList[$value->id]["orderId"]         = $value->id;
                 $invoiceList[$value->id]["orderNum"]        = $value->invoicenum;
                 $invoiceList[$value->id]["clientId"]        = $value->userid;
                 $invoiceList[$value->id]["orderDate"]       = date("d-m-Y",strtotime($value->date));
                 $invoiceList[$value->id]["invoiceDueDate"]  = date("d-m-Y",strtotime($value->duedate));
-                $invoiceList[$value->id]["invoiceDatePaid"] = date("d-m-Y",strtotime($value->datepaid));
+                $invoiceList[$value->id]["invoiceDatePaid"] = (!preg_match('/[1-9]/', $value->datepaid)) ? NULL : date("d-m-Y",strtotime($value->datepaid));
                 $invoiceList[$value->id]["total"]           = $value->total;
                 $invoiceList[$value->id]["status"]          = (strtolower($value->status) == 'paid') ? 'Pagada' : 'No pagada';
                 $invoiceList[$value->id]["orderdata"]       = self::getInvoiceItems($value->id);
@@ -231,6 +231,9 @@ class WrapperHelper {
 
 
             $collection = array_diff_key($invoiceList, $facturaInvoiceList);
+            // echo "<pre>";
+            // var_dump($collection);
+            // die;
             return $collection;
         }
 
@@ -361,7 +364,7 @@ class WrapperHelper {
      * @param String $paymentMethod
      * @return Array
      */
-    static function createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW, $paymentMethod){
+    static function createInvoice($orderNum, $orderItems, $clientData, $serieInvoices, $clientW, $paymentMethod, $numerocuenta){
         if($clientData[0] == ""){
             return array(
                 'Error' => 'No se ha recibido el UID del cliente.',
@@ -431,22 +434,23 @@ class WrapperHelper {
             array_push($invoiceConcepts, $product);
         }
 
-        if($paymentMethod == 'Deposito'){
-          $paymentMethodText = 'No Identificado';
+        if($numerocuenta == ''){
+          $num_cta = 'No Identificado';
         }else{
-          $paymentMethodText = 'No Identificado';
+          $num_cta = $numerocuenta;
         }
 
         $invoiceData = array(
             'rfc'           => $clientRFC,
             'items'         => $invoiceConcepts,
-            'numerocuenta'  => 'No Identificado',
+            'numerocuenta'  => $num_cta,
             'formapago'     => 'Pago en una Sola Exhibición',
-            'metodopago'    => $paymentMethodText,
+            'metodopago'    => $paymentMethod,
             'currencie'     => 'MXN',
             'iva'           => 1,
             'num_order'     => $orderNum,
             'seriefactura'  => $serieInvoices,
+            'send_email'    => true,
             'save'          => 'true'
         );
 

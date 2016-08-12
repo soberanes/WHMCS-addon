@@ -40,7 +40,7 @@ $(function(){
         return;
         }
 
-        var regex = new RegExp("^[a-zA-Z0-9]+$");
+        var regex = new RegExp("^[a-zA-Z0-9_&]*$");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
 
         if (!regex.test(key)) {
@@ -135,6 +135,39 @@ $(function(){
 
 	});
 
+    $('#step-two-button-back-two').unbind().on('click', function(e){
+        $('#step-two').hide();
+        $('#step-one').fadeIn('slow');
+    });
+
+    $('#invoice-button-next').unbind().on('click', function(e){
+        e.preventDefault();
+
+        // $(this).validate({
+        //   submitHandler: function(form) {
+        //     // do other things for a valid form
+        //     form.submit();
+        //   }
+        // });
+
+        // $(this).attr('disabled', true);
+        // $(this).val('Procesando');
+
+        // $('#step-two').hide();
+        $('#step-one').hide().delay(3000);
+        $('#step-two').fadeIn('slow');
+    });
+
+    $("#paymentMethod").change(function(){
+         var selected_method = $( "#paymentMethod option:selected" ).val();
+
+         if(selected_method == 4 || selected_method == 5){
+           $("#num-cta-box").fadeIn('fast');
+         }else{
+           $("#num-cta-box").fadeOut('fast');
+         }
+     });
+
     $('#invoice-button-create').unbind().on('click', function(e){
         e.preventDefault();
 
@@ -144,6 +177,10 @@ $(function(){
         //     form.submit();
         //   }
         // });
+
+        // $(this).attr('disabled', true);
+        // $(this).val('Procesando');
+
         var form = $('#fiscalDataForm');
 
         if(!form.isValid()){
@@ -166,8 +203,11 @@ $(function(){
         var serieInvoices = $('#serieInvoices').val();
         var clientW       = $('#clientW').val();
         var orderNum      = $('#orderNum').val();
+        var paymentMethod = $( "#paymentMethod option:selected" ).val();
 
         var orderItems    = $('#orderItems').val();
+
+        var numerocuenta  = $( "#input-numerocuenta" ).val();
 
         var parameters    = {
             'function'      : 'createInvoice',
@@ -176,6 +216,8 @@ $(function(){
             'orderNum'      : orderNum,
             'orderItems'    : orderItems,
             'clientW'       : clientW,
+            'paymentMethod' : paymentMethod,
+            'numerocuenta'  : numerocuenta
         };
 
         $.ajax({

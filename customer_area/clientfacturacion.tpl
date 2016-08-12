@@ -28,7 +28,11 @@
                     <td>{$order.orderDate}</td>
                     <td>{$order.invoiceDatePaid}</td>
                     <td>${$order.total}</td>
-                    <td><span class="label status status-{if $order.status eq 'Pagada'}paid{else}unpaid{/if}">{$order.status}</span></td>
+                    <td>
+                      <span class="label status status-{if $order.status eq 'Paid'}paid{else}unpaid{/if}">
+                        {if $order.status eq 'Paid'} {Lang::trans('invoicespaid')} {else} {Lang::trans('invoicesunpaid')} {/if}
+                      </span>
+                    </td>
                     <td>
                         {if $order.open eq true and $order.sent eq false}
                         <a href="#" class="btn btn-success btn-modal-form"

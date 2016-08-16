@@ -414,7 +414,7 @@ class WrapperHelper {
             $productPrice = 0;
 
             if($configEntity["iva"] == 'on'){
-              $productPrice = $value->amount - ($value->amount * 0.16);
+              $productPrice = $value->amount / 1.16;
             }else{
               $productPrice = $value->amount;
             }
@@ -424,7 +424,7 @@ class WrapperHelper {
                 'unidad'    => 'Servicio',
                 'concept'   => $value->description,
                 'precio'    => $productPrice,
-                'subtotal'  => $value->amount * 1,
+                'subtotal'  => $productPrice * 1,
             );
 
             array_push($invoiceConcepts, $product);

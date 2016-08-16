@@ -27,7 +27,7 @@ require_once 'wrapperapp.php';
 function facturacom_config(){
     $configarray = array(
         'name'         => 'Factura.com',
-    	'version'      => '1.5.0',
+    	'version'      => '1.5.1',
     	'author'       => 'Factura.com',
         'logo'         => 'https://factura.com/assets/images/logo_horizontal.svg',
     	'description'  => 'Módulo de integración con el servicio de

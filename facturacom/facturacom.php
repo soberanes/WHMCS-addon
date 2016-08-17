@@ -10,8 +10,8 @@
 
 
 // FOR DEBUG
-error_reporting(1);
-error_reporting(E_ALL & ~E_NOTICE);
+// error_reporting(1);
+// error_reporting(E_ALL & ~E_NOTICE);
 
 
 if (!defined("WHMCS"))

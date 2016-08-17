@@ -49,6 +49,21 @@ $(function(){
         }
     });
 
+
+    $('#input-numerocuenta').bind('keypress', function (evt) {
+        var iKeyCode = (evt.which) ? evt.which : evt.keyCode
+
+        if (iKeyCode != 8 && iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+            return false;
+
+
+        var val_length = $(this).val().length;
+        if(val_length >= 4)
+            return false;
+
+        return true;
+    });
+
     $(".input-upper").on('input', function(evt) {
         var input = $(this);
         var start = input[0].selectionStart;
@@ -161,7 +176,7 @@ $(function(){
     $("#paymentMethod").change(function(){
          var selected_method = $( "#paymentMethod option:selected" ).val();
 
-         if(selected_method == 4 || selected_method == 5){
+         if(selected_method == 2 || selected_method == 3 || selected_method == 4 || selected_method == 28 || selected_method == 29){
            $("#num-cta-box").fadeIn('fast');
          }else{
            $("#num-cta-box").fadeOut('fast');
